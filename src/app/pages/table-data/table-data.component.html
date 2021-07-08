@@ -1,0 +1,24 @@
+<div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Video</th>
+                <th>Name</th>
+                <th>Group</th>
+                <th>Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of data">
+                <td>
+                    <video width="200" height="100" controls>
+                        <source src="../../../assets/video/{{item.path}}#t=0.1" type="video/mp4">
+                    </video>
+                </td>
+                <td>{{item.path}}</td>
+                <td>{{item.rotationSet}}</td>
+                <td>{{item.type}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

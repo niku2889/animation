@@ -1,0 +1,109 @@
+video { 
+    /* position: fixed; */
+    /* top: 50%;
+    left: 50%; */
+    /* min-width: 100%; */
+    /* min-height: 100%;
+    width: auto;
+    height: auto; */
+    /* z-index: -100; */
+    /* transform: translateX(-50%) translateY(-50%); */
+    /* background: url('//demosthenes.info/assets/images/polina.jpg') no-repeat; */
+    background-size: cover;
+    transition: 1s opacity;
+}
+
+.md-prev-btn,
+.md-next-btn {
+    position: absolute;
+    top: 50%;
+    margin-top: -35px;
+    width: 35px;
+    height: 70px;
+    background: rgba(0, 0, 0, .5);
+    line-height: 70px;
+    font-size: 25px;
+    text-align: center;
+    color: #fff;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.md-prev-btn {
+    left: 0;
+}
+
+.md-next-btn {
+    right: 0;
+}
+
+.loader {
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    width: 120px;
+    height: 120px;
+    -webkit-animation: spin 2s linear infinite; /* Safari */
+    animation: spin 2s linear infinite;
+    
+  }
+
+  .centered {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transform: -webkit-translate(-50%, -50%);
+    transform: -moz-translate(-50%, -50%);
+    transform: -ms-translate(-50%, -50%);
+  }
+  
+  /* Safari */
+  @-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .spinner.loading {
+    display: none;
+    text-align: center;
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 106px;
+    height: 106px;
+  }
+  
+  .spinner.loading:before {
+    content: "";
+    height: 90px;
+    width: 90px;
+  
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-width: 8px;
+    border-style: solid;
+    border-color: #2180c0 #ccc #ccc;
+    border-radius: 100%;
+    animation: rotation .7s infinite linear;
+  }
+  
+  
+  @keyframes rotation {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(359deg);
+    }
+  }

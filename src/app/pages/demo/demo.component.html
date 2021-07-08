@@ -1,0 +1,17 @@
+<div *ngIf="!loading" class="row">
+    <div *ngFor="let item of bImageData" style="display: none;">
+        <img [src]="getSafeData(item.src)" />
+    </div>
+    <div class="embed-responsive embed-responsive-16by9">
+        <video height="240" muted autoplay playsinline preload="metadata" [poster]="posterSrc" (click)="toggleVideo()"
+            (ended)="videoEnd()" #videoPlayer>
+            <source [src]="videoSrc" type="video/mp4" />
+            Browser not supported
+        </video>
+        <div class="md-prev-btn" (click)="previous()"><i class="fa-arrow-left fa-next fas"></i></div>
+        <div class="md-next-btn" (click)="next()"><i class="fa-arrow-right fa-next fas"></i></div>
+    </div>
+</div>
+<div *ngIf="loading" id="divSpinner" class="spinner loading centered">
+    <p>{{loadPercentage}}%</p>
+</div>
