@@ -4,7 +4,7 @@
     </div>
     <div class="embed-responsive embed-responsive-16by9">
         <video height="240" muted autoplay playsinline preload="metadata" [poster]="posterSrc" (click)="toggleVideo()"
-            (ended)="videoEnd()" #videoPlayer>
+            (ended)="videoEnd()" (loadeddata)="canplaythrough($event)" #videoPlayer>
             <source [src]="videoSrc" type="video/mp4" />
             Browser not supported
         </video>

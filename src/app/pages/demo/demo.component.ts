@@ -14,7 +14,9 @@ export class DemoComponent {
   type = "";
   rotateType = "";
   videoSrc: any;
+  videoSrc1: any;
   @ViewChild("videoPlayer", { static: false }) videoplayer: ElementRef;
+  @ViewChild("videoPlayer1", { static: false }) videoplayer1: ElementRef;
   isPlay: boolean = false;
   posterSrc: any;
   loadedData = [];
@@ -85,21 +87,21 @@ export class DemoComponent {
   { id: 64, path: "Zoomed_Set_Rotation_Asset_08.mp4", rotationSet: 8, type: "zoomnext" },
   { id: 65, path: "Zoomed_Set_Rotation_Asset_08_REVERSE.mp4", rotationSet: 8, type: "zoomreverse" }]
 
-  imageData = [{ id: 1, path: "01_HUD_Idle.jpg" }, { id: 1, path: "01_Idle.jpg" },
-  { id: 1, path: "02_HUD_Idle.jpg" }, { id: 1, path: "02_Idle.jpg" },
-  { id: 1, path: "03_HUD_Idle.jpg" }, { id: 1, path: "03_Idle.jpg" },
-  { id: 1, path: "04_HUD_Idle.jpg" }, { id: 1, path: "04_Idle.jpg" },
-  { id: 1, path: "05_HUD_Idle.jpg" }, { id: 1, path: "05_Idle.jpg" },
-  { id: 1, path: "06_HUD_Idle.jpg" }, { id: 1, path: "06_Idle.jpg" },
-  { id: 1, path: "07_HUD_Idle.jpg" }, { id: 1, path: "07_Idle.jpg" },
-  { id: 1, path: "08_HUD_Idle.jpg" }, { id: 1, path: "08_Idle.jpg" }]
+  imageData = [{ id: 1, path: "01_HUD_Idle.jpg" }, { id: 2, path: "01_Idle.jpg" },
+  { id: 3, path: "02_HUD_Idle.jpg" }, { id: 4, path: "02_Idle.jpg" },
+  { id: 5, path: "03_HUD_Idle.jpg" }, { id: 6, path: "03_Idle.jpg" },
+  { id: 7, path: "04_HUD_Idle.jpg" }, { id: 8, path: "04_Idle.jpg" },
+  { id: 9, path: "05_HUD_Idle.jpg" }, { id: 10, path: "05_Idle.jpg" },
+  { id: 11, path: "06_HUD_Idle.jpg" }, { id: 12, path: "06_Idle.jpg" },
+  { id: 13, path: "07_HUD_Idle.jpg" }, { id: 14, path: "07_Idle.jpg" },
+  { id: 15, path: "08_HUD_Idle.jpg" }, { id: 16, path: "08_Idle.jpg" }]
   loading = true;
   loadPercentage = 0;
   bImageData = [];
+  clicks = 0;
+  imageId = 1;
 
   constructor(private _http: HttpClient, private sanitization: DomSanitizer) {
-    this.videoSrc = "../assets/video/" + this.data[0].path;
-    this.posterSrc = "../assets/images/01_Idle.jpg";
     this.loadAllVideo();
   }
 
@@ -117,6 +119,8 @@ export class DemoComponent {
       if (i == (this.imageData.length - 1)) {
         this.loading = false;
         this.bImageData = this.loadedData.filter(a => a.type == "image");
+        this.videoSrc = this.sanitization.bypassSecurityTrustResourceUrl(this.loadedData.filter(a => a.path == "../assets/video/" + this.data[0].path)[0].src);
+        this.posterSrc = this.sanitization.bypassSecurityTrustResourceUrl(this.loadedData.filter(a => a.path == "../assets/images/" + this.imageData[1].path)[0].src);
       }
     }
   }
@@ -134,7 +138,7 @@ export class DemoComponent {
           if (res.status == 200) {
             resolve(res);
             if (res.body) {
-              var vid = window.URL.createObjectURL(res.body); // IE10+
+              var vid = window.URL.createObjectURL(res.body); 
               let d = { path: path, src: vid, type: type };
               this.loadPercentage = Math.round(this.loadPercentage + 1.20);
               this.loadedData.push(d);
@@ -152,14 +156,12 @@ export class DemoComponent {
   }
 
   videoEnd() {
+    if (this.clicks == 1) {
+      let pSrc = "../assets/images/08_Idle.jpg";
+      this.posterSrc = this.sanitization.bypassSecurityTrustResourceUrl(this.loadedData.filter(a => a.path == pSrc)[0].src);
+    }
     if (this.counter == this.data.length)
       this.videoplayer.nativeElement.stop();
-    else {
-      // this.videoSrc = this.counter == 1 ? "../assets/video/" + this.data[1].path : "../assets/video/" + this.data[this.counter].path;
-      // //this.videoplayer.nativeElement.load();
-      // this.videoplayer.nativeElement.play();
-      // this.counter++;
-    }
   }
 
   next() {
@@ -173,6 +175,7 @@ export class DemoComponent {
       this.videoSrc = this.sanitization.bypassSecurityTrustResourceUrl(this.loadedData.filter(a => a.path == vSrc)[0].src);
     } else {
       let pSrc = "../assets/images/0" + (vdata[0].rotationSet) + "_Idle.jpg";
+      this.imageId = this.loadedData.filter(a => a.path == pSrc)[0].id;
       this.posterSrc = this.sanitization.bypassSecurityTrustResourceUrl(this.loadedData.filter(a => a.path == pSrc)[0].src);
       let vSrc = "../assets/video/" + vdata.filter(a => a.type == "rotation")[0].path;
       this.videoSrc = this.sanitization.bypassSecurityTrustResourceUrl(this.loadedData.filter(a => a.path == vSrc)[0].src);
@@ -181,10 +184,11 @@ export class DemoComponent {
     this.videoplayer.nativeElement.play();
     this.rotationCounter = this.rotationCounter == 8 ? 1 : this.rotationCounter + 1;
     this.rotateType = "next";
+    this.loading = false;
   }
 
   previous() {
-    this.posterSrc = "";
+    this.posterSrc = this.clicks == 0 ? this.posterSrc : "";
     this.rotationCounter = this.rotateType == "next" ? (this.rotationCounter == 1 ? 8 : this.rotationCounter - 1) : this.rotationCounter;
     this.rotationCounter = this.rotateType == "" ? 8 : this.rotationCounter;
     let vdata = this.data.filter(a => a.rotationSet == this.rotationCounter);
@@ -194,8 +198,10 @@ export class DemoComponent {
       let vSrc = "../assets/video/" + vdata.filter(a => a.type == "zoomreverse")[0].path;
       this.videoSrc = this.sanitization.bypassSecurityTrustResourceUrl(this.loadedData.filter(a => a.path == vSrc)[0].src);
     } else {
-      let pSrc = "../assets/images/0" + (vdata[0].rotationSet == 7 ? 8 : (this.rotationCounter == 8 ? 1 : vdata[0].rotationSet + 1)) + "_Idle.jpg";
-      this.posterSrc = this.sanitization.bypassSecurityTrustResourceUrl(this.loadedData.filter(a => a.path == pSrc)[0].src);
+      if (this.clicks > 0) {
+        let pSrc = "../assets/images/0" + (vdata[0].rotationSet == 7 ? 8 : (this.rotationCounter == 8 ? 1 : vdata[0].rotationSet + 1)) + "_Idle.jpg";
+        this.posterSrc = this.sanitization.bypassSecurityTrustResourceUrl(this.loadedData.filter(a => a.path == pSrc)[0].src);
+      }
       let vSrc = "../assets/video/" + vdata.filter(a => a.type == "reverse")[0].path;
       this.videoSrc = this.sanitization.bypassSecurityTrustResourceUrl(this.loadedData.filter(a => a.path == vSrc)[0].src);
     }
@@ -203,6 +209,10 @@ export class DemoComponent {
     this.videoplayer.nativeElement.play();
     this.rotationCounter = this.rotationCounter == 1 ? 8 : this.rotationCounter - 1;
     this.rotateType = "previous";
+    this.clicks++;
+  }
+  canplaythrough(event) {
+    this.imageId = 0;
   }
 
   toggleVideo() {
