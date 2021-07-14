@@ -1,11 +1,11 @@
-<div *ngIf="!loading" class="row">
+<div *ngIf="!loading" class="row" >
     <div *ngFor="let item of bImageData" style="display: none;">
         <img [src]="getSafeData(item.src)" />
     </div>
-    <div class="embed-responsive embed-responsive-16by9">
-        <video height="240" muted autoplay playsinline preload="metadata" [poster]="posterSrc" (click)="toggleVideo()"
+    <div  class="embed-responsive embed-responsive-16by9">
+        <video (mousemove)="mouseover($event)" height="240" muted autoplay playsinline preload="metadata" [poster]="posterSrc" (click)="toggleVideo()"
             (ended)="videoEnd()" (loadeddata)="canplaythrough($event)" #videoPlayer>
-            <source [src]="videoSrc" type="video/mp4" />
+            <source [src]="videoSrc" type="{{videoType}}" />
             Browser not supported
         </video>
         <div class="md-prev-btn" (click)="previous()"><i class="fa-arrow-left fa-next fas"></i></div>

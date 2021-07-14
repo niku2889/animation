@@ -20,6 +20,7 @@ export class DemoComponent {
   isPlay: boolean = false;
   posterSrc: any;
   loadedData = [];
+  videoType = "video/mp4";
 
   data = [{ id: 1, path: "00_Opening_Shot.mp4", rotationSet: 1, type: "opening" },
   { id: 2, path: "01_Asset_1_Idle.mp4", rotationSet: 1, type: "idle" },
@@ -94,7 +95,8 @@ export class DemoComponent {
   { id: 9, path: "05_HUD_Idle.jpg" }, { id: 10, path: "05_Idle.jpg" },
   { id: 11, path: "06_HUD_Idle.jpg" }, { id: 12, path: "06_Idle.jpg" },
   { id: 13, path: "07_HUD_Idle.jpg" }, { id: 14, path: "07_Idle.jpg" },
-  { id: 15, path: "08_HUD_Idle.jpg" }, { id: 16, path: "08_Idle.jpg" }]
+  { id: 15, path: "08_HUD_Idle.jpg" }, { id: 16, path: "08_Idle.jpg" }];
+  cleanPlateData = [{ id: 1, path: "Asset_1_Spin_Video_Every_Third_Frame.webm" }]
   loading = true;
   loadPercentage = 0;
   bImageData = [];
@@ -109,6 +111,14 @@ export class DemoComponent {
     for (let i = 0; i < this.data.length; i++) {
       let vData = await this.getData("../assets/video/" + this.data[i].path, "video");
       if (i == (this.data.length - 1))
+        this.loadCleanPlateVideo();
+    }
+  }
+
+  async loadCleanPlateVideo() {
+    for (let i = 0; i < this.cleanPlateData.length; i++) {
+      let vData = await this.getData("../assets/video/" + this.cleanPlateData[i].path, "video");
+      if (i == (this.cleanPlateData.length - 1))
         this.loadAllImage();
     }
   }
@@ -138,7 +148,7 @@ export class DemoComponent {
           if (res.status == 200) {
             resolve(res);
             if (res.body) {
-              var vid = window.URL.createObjectURL(res.body); 
+              var vid = window.URL.createObjectURL(res.body);
               let d = { path: path, src: vid, type: type };
               this.loadPercentage = Math.round(this.loadPercentage + 1.20);
               this.loadedData.push(d);
@@ -160,11 +170,14 @@ export class DemoComponent {
       let pSrc = "../assets/images/08_Idle.jpg";
       this.posterSrc = this.sanitization.bypassSecurityTrustResourceUrl(this.loadedData.filter(a => a.path == pSrc)[0].src);
     }
+    if (this.type == "zoomout")
+      this.loadCleanPlate();
     if (this.counter == this.data.length)
       this.videoplayer.nativeElement.stop();
   }
 
   next() {
+    this.videoType = "video/mp4";
     this.posterSrc = "";
     this.rotationCounter = this.rotateType == "previous" ? (this.rotationCounter == 8 ? 1 : this.rotationCounter + 1) : this.rotationCounter;
     let vdata = this.data.filter(a => a.rotationSet == this.rotationCounter);
@@ -188,6 +201,7 @@ export class DemoComponent {
   }
 
   previous() {
+    this.videoType = "video/mp4";
     this.posterSrc = this.clicks == 0 ? this.posterSrc : "";
     this.rotationCounter = this.rotateType == "next" ? (this.rotationCounter == 1 ? 8 : this.rotationCounter - 1) : this.rotationCounter;
     this.rotationCounter = this.rotateType == "" ? 8 : this.rotationCounter;
@@ -211,11 +225,13 @@ export class DemoComponent {
     this.rotateType = "previous";
     this.clicks++;
   }
+
   canplaythrough(event) {
     this.imageId = 0;
   }
 
   toggleVideo() {
+    this.videoType = "video/mp4";
     if (this.type == "" || this.type == "zoomin") {
       let vdata = this.data.filter(a => a.rotationSet == (this.rotateType != "" && this.rotateType == "previous" ? (this.rotationCounter == 8 ? 1 : this.rotationCounter + 1) : this.rotationCounter));
       let pSrc = "../assets/images/0" + (vdata[0].rotationSet) + "_Idle.jpg";
@@ -235,5 +251,35 @@ export class DemoComponent {
       this.videoplayer.nativeElement.play();
       this.type = "zoomin";
     }
+  }
+
+  supportsHEVCAlpha() {
+    const navigator = window.navigator;
+    const ua = navigator.userAgent.toLowerCase();
+    let hasMediaCapabilities = false;
+    if ("mediaCapabilities" in navigator)
+      hasMediaCapabilities = true;
+    const isSafari = ((ua.indexOf('safari') != -1) && (!(ua.indexOf('chrome') != -1) && (ua.indexOf('version/') != -1)))
+    return isSafari && hasMediaCapabilities
+  }
+
+  loadCleanPlate() {
+    this.posterSrc = "";
+    let pSrc = "../assets/images/01_HUD_Idle.jpg";
+    this.posterSrc = this.sanitization.bypassSecurityTrustResourceUrl(this.loadedData.filter(a => a.path == pSrc)[0].src);
+    this.videoType = this.supportsHEVCAlpha() ? 'video/mov' : 'video/webm';
+    let vSrc = "../assets/video/" + this.cleanPlateData.filter(a => a.id == 1)[0].path;
+    this.videoSrc = this.sanitization.bypassSecurityTrustResourceUrl(this.loadedData.filter(a => a.path == vSrc)[0].src);
+    this.videoplayer.nativeElement.load();
+    this.videoplayer.nativeElement.play();
+  }
+
+  mouseover(event) {
+    // if (this.type == "zoomout") {
+    //   if (event.x > event.y)
+    //     this.videoplayer.nativeElement.currentTime = this.videoplayer.nativeElement.currentTime + 1;
+    //   else
+    //     this.videoplayer.nativeElement.currentTime = this.videoplayer.nativeElement.currentTime - 1;
+    // }
   }
 }
