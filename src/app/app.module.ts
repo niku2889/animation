@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { TableDataComponent } from './pages/table-data/table-data.component';
 import { DemoComponent } from './pages/demo/demo.component';
+import { ThreeSixtyModule } from '@mediaman/angular-three-sixty';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { DemoComponent } from './pages/demo/demo.component';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    ThreeSixtyModule
   ],
   providers: [],
   bootstrap: [AppComponent]

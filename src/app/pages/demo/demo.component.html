@@ -1,17 +1,46 @@
-<div *ngIf="!loading" class="row" >
+<div *ngIf="!loading" class="row">
     <div *ngFor="let item of bImageData" style="display: none;">
         <img [src]="getSafeData(item.src)" />
     </div>
-    <div  class="embed-responsive embed-responsive-16by9">
-        <video (mousemove)="mouseover($event)" height="240" muted autoplay playsinline preload="metadata" [poster]="posterSrc" (click)="toggleVideo()"
-            (ended)="videoEnd()" (loadeddata)="canplaythrough($event)" #videoPlayer>
+    <div class="embed-responsive embed-responsive-16by9" id="videoDemoId">
+        <video (mousemove)="mousemove($event)" (mousedown)="mousedown($event)" (mouseup)="mouseup()" muted autoplay
+            playsinline preload="metadata" [poster]="posterSrc" (click)="toggleVideo()" (ended)="videoEnd()"
+            (loadeddata)="canplaythrough($event)" #videoPlayer>
             <source [src]="videoSrc" type="{{videoType}}" />
             Browser not supported
         </video>
+        <div *ngIf="type == 'zoomout'" id="demo" class="image-zoom">
+        </div>
+
+        <div class="pos-icon">
+            <a (click)="changeBackground('cloud')"><i class="fa fa-2x fa-cloud fa-ctm mr-2"></i></a>
+            <a (click)="changeBackground('sun')"><i class="fa fa-2x fa-sun fa-ctm mr-2"></i></a>
+            <!-- <a (click)="changeBackground('moon')"><i class="fa fa-2x fa-moon fa-ctm"></i></a> -->
+            <!-- <video *ngIf="videoSrc1 && videoSrc1 != null" #videoPlayer1 [style.transform]="getRotationAngle()"
+                class="video-overlay__video video-zoom" loop muted autoplay playsinline>
+                <source [src]="videoSrc1" type="video/webm" />
+            </video> -->
+            <!-- <div *ngIf="!loading" class="video-overlay__video image-zoom" style="top:15%;">
+                <mm-three-sixty [width]="100" [height]="175" [angles]="360" [hotspots]="hotspots" [anglesPerImage]="1"
+                    [images]="threeSixtyImages" [preload]="true"></mm-three-sixty>
+            </div> -->
+            <!-- <div class="video-overlay__video image-zoom" style="top:15%;">
+                
+            </div> -->
+        
+            <!-- <img style="top:15%;" *ngIf="videoSrc1 == null && imageSrc" class="video-overlay__video image-zoom"
+                [src]="imageSrc"> -->
+        </div>
         <div class="md-prev-btn" (click)="previous()"><i class="fa-arrow-left fa-next fas"></i></div>
         <div class="md-next-btn" (click)="next()"><i class="fa-arrow-right fa-next fas"></i></div>
     </div>
 </div>
+
+
+
+<!-- <div class="row">
+    <img *ngFor="let item of videoFrames" class="col-md-1" [src]="item">
+</div> -->
 <div *ngIf="loading" id="divSpinner" class="spinner loading centered">
     <p>{{loadPercentage}}%</p>
 </div>

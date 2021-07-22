@@ -108,4 +108,53 @@ video {
     }
   }
 
-  :root .mejs-poster img {display: block !important};
+  :root .mejs-poster img {display: block !important;}
+
+  .video-overlay {
+    position: absolute;
+    width: 360px;
+    height: 440px;
+    right: -50px;
+    bottom: -85px;
+    pointer-events: none;
+  }
+  
+  .video-overlay__box {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: #3a4a59;
+    transform: rotate3d(37, -12, 13, 90deg) translateX(-50%);
+    position: absolute;
+    bottom: -90px;
+    right: -80px;
+    z-index: 1;
+  }
+
+  .video-zoom{
+    position: absolute!important;
+    width: 15%!important;
+    left: 52%!important;
+    top:-10%!important;
+  }
+
+  .image-zoom{
+    position: absolute!important;
+    width: 20%!important;
+    height: 50%!important;
+    text-align: center;
+    left: 47%!important;
+    top:9%!important;
+  }
+
+  .fa-ctm{
+    color: transparent;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: white;
+  }
+
+  .pos-icon{
+    position: absolute!important;
+    right: 2%;
+    top: 2%;
+  }
